@@ -1,0 +1,11 @@
+version: "3"
+services:
+  swoft:
+     build: 
+       dockerfile: docker-files/incsac/Dockerfile
+       context: .
+     volumes:
+       - ./swoft:/var/www/html
+       - ./sysconfig:/etc/sysconfig
+     ports:
+       - 8080:18306

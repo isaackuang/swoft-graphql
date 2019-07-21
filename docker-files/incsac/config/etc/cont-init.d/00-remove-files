@@ -1,0 +1,7 @@
+#!/bin/sh
+rm -rf /var/www/html/docker-files
+rm -rf /var/www/html/tools
+rm -rf /var/www/html/tests
+rm -rf /var/www/html/sysconfig
+rm -rf /var/www/html/md
+rm -rf /var/www/html/README.md

@@ -1,0 +1,6 @@
+#!/bin/bash
+if [ -t 1 ]; then
+    docker run -it --rm -v $PWD:/var/www/html --entrypoint phpunit isaackuang/php-composer $@
+else
+    docker run --rm -v $PWD:/var/www/html --entrypoint phpunit isaackuang/php-composer $@
+fi

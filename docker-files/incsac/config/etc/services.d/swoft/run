@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cd /var/www/html
+
+# php bin/swoft http:start
+
+/opt/swoftcli run -c http:start -b bin/swoft /var/www/html

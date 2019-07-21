@@ -1,0 +1,368 @@
+scalar JSON
+  scalar JSONObject
+  scalar Date
+  scalar Time
+  scalar DateTime
+  type Query {
+    store (subdomain: String): Store
+    order (id: ID!, email: String!, lastName: String!): Order
+    products: [Product!]!
+    product (id: ID!): Product
+    availableDates (month: String, productId: ID!): [AvailableDate!]!
+    currencies: [Currency!]!
+    currency (id: ID, code: String): Currency
+    languages (spoken: Boolean): [Language!]!
+    locales (type: String): [Locale!]!
+    previewOrder (productId: ID!, payload: JSONObject!): OrderPreview!
+  }
+  type OrderPreview {
+    purchaseContents: [PurchaseContent!]!
+    depositRule: DepositRule!
+    contact: [OrderInformation!]!
+    total: Float!
+  }
+  type Locale {
+    id: ID!
+    name: String!
+    type: String!
+    iti: Int
+    code: String
+  }
+  type AvailableDate {
+    date: String!
+    salesOptions: [String!]!
+  }
+  type Mutation {
+    order (preview: Boolean!, payload: JSONObject): JSONObject
+    createOrder (productId: ID!, payload: JSONObject): Order
+    payOrder (orderId: ID!, token: String, paymentType: PaymentType!, depositAmount: Float!): OrderActionResult
+  }
+  type OrderActionResult {
+    success: Boolean!
+    order: Order!
+  }
+  type Currency {
+    id: ID!
+    code: String!
+    exchangeRate: Float
+    name: String!
+    symbol: String
+    pattern: String
+  }
+  type Language {
+    id: ID!
+    code: String!
+    name: String!
+    spoken: Boolean!
+    pricePattern: String
+    thousand: String
+    decimal: String
+    datePattern: String
+    timePattern: String
+  }
+  type Store {
+    id: ID!
+    subdomain: String!
+    name: String!
+    address: String!
+    email: String!
+    facebook: String
+    twitter: String
+    instagram: String
+    youtube: String
+    line: String
+    privacyPolicy: String
+    termsOfService: String
+    postcode: String
+    phone: Tel!
+    mobile: Tel
+    products: [Product!]!
+    product (id: ID!): Product
+    siteConfig: SiteConfig!
+  }
+  type Tel {
+    iti: Int!
+    number: String!
+  }
+  type SiteConfig {
+    contents: [SiteContent!]!
+    theme: Theme!
+    headerType: String
+    title: String
+    logo: String
+    bannerHeadline: String
+    bannerSubHeadline: String
+    introductionTitle: String
+    introductionTexts: String
+    bannerImage: String
+  }
+  enum SiteContentCategory {
+    MENU
+    FOOTER
+  }
+  type SiteContent {
+    type: String!
+    category: SiteContentCategory!
+    label: String
+    visible: Boolean!
+  }
+  type Theme {
+    mainColor: String!
+    subColor: String!
+    textColor: String!
+    subTextColor: String!
+    buttonMainColor: String!
+    buttonTextColor: String!
+  }
+  type Product {
+    id: ID!
+    title: String!
+    brief: String
+    confirm: Confirmation
+    description: String
+    warnings: String
+    location: Location
+    priceStartAt: Float
+    currency: Currency!
+    videos: [Video!]!
+    voucher: String
+    cover: String
+    timezone: String
+    duration: Duration
+    pickup: [ProductPickUp!]!
+    guidedServices: [GuideService]!
+    itineraries: [Itinerary!]!
+    priceDetails: [PriceDetail!]!
+    salesOptions: [SalesOption!]!
+    availableDates (date: Date, month: String): [AvailableDate!]!
+    cancelPolicies: [CancelPolicy!]!
+    locations: [ProductLocation!]!
+    extras: [Extra!]!
+    contact: [OrderInformation!]!
+    participant: [OrderInformation!]!
+    order: [OrderInformation!]!
+    paymentMethods: [PaymentMethod!]!
+  }
+  type ProductPickUp {
+    id: ID!
+    description: String
+    vehicle: String
+    instructions: String
+    label: String
+    diff: Int
+    location: Location
+    request: String
+  }
+  enum PaymentType {
+    BANK_TRANSFER
+    CASH
+    CREDIT_CARD
+  }
+  enum ConfirmationMode {
+    BOOKING
+    DEPARTURE
+  }
+  type Confirmation {
+    mode: ConfirmationMode!
+    hour: Int!
+  }
+  type Duration {
+    day: Int!
+    hour: Int!
+    min: Int!
+  }
+  type Extra {
+    id: ID!
+    image: String
+    label: String
+    price: Float
+    isPerOrder: Boolean
+    description: String
+  }
+  enum CancelPolicyPeriodUnit {
+    DAY
+    HOUR
+  }
+  enum CancelPolicyChargeUnit {
+    FIXED
+    PERCENTAGE
+  }
+  type CancelPolicy {
+    from: Int
+    to: Int
+    charge: Float!
+    chargeUnit: CancelPolicyChargeUnit
+    periodUnit: CancelPolicyPeriodUnit
+  }
+  type Location {
+    state: String
+    country: String
+    city: String
+    address: String
+    geo: Geolocation
+    tag: String
+    label: String
+    description: String
+  }
+  enum ProductLocationType {
+    MEET_PLACE
+    DESTINATION
+  }
+  type ProductLocation {
+    type: ProductLocationType!
+    title: String!
+    address: String!
+    geo: Geolocation
+    displayMap: Boolean!
+    image: String
+    images: [String!]!
+    note: String
+  }
+  type Geolocation {
+    lng: Float!
+    lat: Float!
+    geoHash: String
+  }
+  type PriceDetail {
+    label: String!
+    included: Boolean!
+  }
+  enum Meal {
+    BREAKFAST
+    LUNCH
+    DINNER
+  }
+  type Itinerary {
+    meals: [Meal!]!
+    contents: [ItineraryContent!]!
+  }
+  type ItineraryContent {
+    hour: Int
+    min: Int
+    image: String
+    title: String!
+  }
+  type GuideService {
+    type: ID!
+    langs: [Language!]
+    lang: Language
+  }
+  type Video {
+    url: String!
+    languages: [Language!]
+  }
+  type SalesOption {
+    id: ID!
+    productId: String!
+    title: String!
+    description: String
+    price: Float!
+    sessions (date: Date!): [Session!]!
+  }
+  type Session {
+    id: ID!
+    salesOptionId: String!
+    startDateTime: String!
+    startDate: Date!
+    startTime: String!
+    endDateTime: String
+    prices: [Price!]!
+  }
+  type Price {
+    id: ID!
+    type: String
+    title: String!
+    policyId: String!,
+    description: String
+    price: Float!
+    max: Int
+    min: Int
+  }
+  enum PurchaseContentType {
+    PERSON
+    ITEM
+    EXTRA
+    FEE
+  }
+  type PurchaseContent {
+    id: ID!
+    type: PurchaseContentType!
+    label: String!
+    unitPrice: Float
+    quantity: Int!
+    subtotal: Float!
+    included: Boolean
+  }
+  enum OrderStatus {
+    EXPIRED
+    PREVIEW
+    IN_PROGRESS
+    CONFIRMED
+    CANCELED
+    USED
+  }
+  type Order {
+    id: ID!
+    email: String
+    status: OrderStatus!
+    firstName: String
+    lastName: String
+    isPaid: Boolean
+    createDateTime: DateTime
+    startDateTime: String
+    endDateTime: String
+    currency: Currency
+    pickup: ProductPickUp
+    guidedServices: [GuideService!]!
+    purchaseContents: [PurchaseContent!]!
+    information: [OrderInformation!]!
+    contact: [OrderInformation!]!
+    participants: [[OrderInformation!]!]!
+    productSnapshot: Product
+    salesOptionSnapshot: SalesOption
+    depositRule: DepositRule
+    paymentMethod: PaymentMethod
+    amount: OrderAmount!
+    note: String
+  }
+  type OrderAmount {
+    total: Float!
+    deposit: Float
+    paid: Float
+  }
+  type PaymentMethod {
+    type: PaymentType!
+    description: String
+  }
+  type DepositRule {
+    deadlineDateTime: DateTime
+    total: Float!
+    options: [Float!]!
+    label: String
+  }
+  type OrderInformation {
+    id: ID!
+    label: String!
+    type: String!
+    required: Boolean!
+    config: JSON
+    value: JSON
+  }
+  enum OrderInformationType {
+    INPUT
+    TEXT
+    EMAIL
+    CITY
+    COUNTRY
+    STATE
+    LANGUAGE
+    LANGUAGESPOKEN
+    DATE
+    DATETIME
+    PHONE
+    SHOE
+    SELECT
+    CHECKBOX
+    INLINE
+    MULTI_LINE
+  }
